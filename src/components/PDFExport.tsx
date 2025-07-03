@@ -124,8 +124,8 @@ const PDFExport = ({ data = [], analysisData }: PDFExportProps) => {
       }
 
       // Add footer to all pages
-      const pageCount = pdf.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
+      const totalPages = (pdf as any).internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
         pdf.setFontSize(8);
         pdf.setFont('helvetica', 'normal');
@@ -139,7 +139,7 @@ const PDFExport = ({ data = [], analysisData }: PDFExportProps) => {
         );
         
         // Page number
-        pdf.text(`Page ${i} of ${pageCount}`, pageWidth - 20, pageHeight - 10, { align: 'right' });
+        pdf.text(`Page ${i} of ${totalPages}`, pageWidth - 20, pageHeight - 10, { align: 'right' });
       }
 
       // Save with descriptive filename
@@ -360,7 +360,7 @@ const PDFExport = ({ data = [], analysisData }: PDFExportProps) => {
                   <div key={key} className="flex items-center space-x-2">
                     <Checkbox
                       id={key}
-                      checked={exportOptions[key]}
+                      checked={exportOptions[key as keyof typeof exportOptions] as boolean}
                       onCheckedChange={(checked) => 
                         setExportOptions(prev => ({ ...prev, [key]: checked }))
                       }

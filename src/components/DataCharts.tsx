@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter } from 'recharts';
-import { EyeOff, Eye, BarChart3, PieChart as PieChartIcon, TrendingUp, Scatter as ScatterIcon } from 'lucide-react';
+import { EyeOff, Eye, BarChart3, PieChart as PieChartIcon, TrendingUp, Activity } from 'lucide-react';
 
 interface DataChartsProps {
   data: any[];
@@ -241,7 +242,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                   {chart.type === 'bar' && <BarChart3 className="h-4 w-4" />}
                   {chart.type === 'pie' && <PieChartIcon className="h-4 w-4" />}
                   {chart.type === 'line' && <TrendingUp className="h-4 w-4" />}
-                  {chart.type === 'scatter' && <ScatterIcon className="h-4 w-4" />}
+                  {chart.type === 'scatter' && <Activity className="h-4 w-4" />}
                   {chart.title}
                 </CardTitle>
                 <div className="h-64">

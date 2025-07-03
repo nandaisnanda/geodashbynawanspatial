@@ -10,6 +10,27 @@ interface SmartAnalyticsProps {
   dataType: string;
 }
 
+interface AttributeStats {
+  min: number;
+  max: number;
+  mean: number;
+  median: number;
+}
+
+interface TopValue {
+  value: any;
+  count: number;
+  percentage: number;
+}
+
+interface AttributeAnalysis {
+  type: 'numeric' | 'categorical' | 'text';
+  uniqueValues: number;
+  nullCount: number;
+  stats?: AttributeStats;
+  topValues?: TopValue[];
+}
+
 interface AnalysisResult {
   totalFeatures: number;
   spatialExtent: {
@@ -20,18 +41,7 @@ interface AnalysisResult {
     center: [number, number];
   } | null;
   attributeAnalysis: {
-    [key: string]: {
-      type: 'numeric' | 'categorical' | 'text';
-      uniqueValues: number;
-      nullCount: number;
-      stats?: {
-        min: number;
-        max: number;
-        mean: number;
-        median: number;
-      };
-      topValues?: Array<{ value: any; count: number; percentage: number }>;
-    };
+    [key: string]: AttributeAnalysis;
   };
   insights: string[];
   recommendations: string[];
@@ -123,8 +133,8 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
     return coords;
   };
 
-  const analyzeAttributes = () => {
-    const attributes = {};
+  const analyzeAttributes = (): { [key: string]: AttributeAnalysis } => {
+    const attributes: { [key: string]: AttributeAnalysis } = {};
     const sampleData = dataType === 'csv' ? data : data.map(d => d.properties || {});
     
     if (sampleData.length === 0) return attributes;
@@ -140,7 +150,7 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
       const numericValues = values.filter(val => !isNaN(parseFloat(val))).map(val => parseFloat(val));
       const isNumeric = numericValues.length > values.length * 0.8 && numericValues.length > 0;
       
-      let analysis = {
+      let analysis: AttributeAnalysis = {
         type: isNumeric ? 'numeric' : (uniqueValues <= 10 ? 'categorical' : 'text'),
         uniqueValues,
         nullCount
@@ -155,7 +165,7 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
           median: sorted[Math.floor(sorted.length / 2)]
         };
       } else if (analysis.type === 'categorical') {
-        const valueCounts = {};
+        const valueCounts: { [key: string]: number } = {};
         values.forEach(val => {
           valueCounts[val] = (valueCounts[val] || 0) + 1;
         });
@@ -176,7 +186,7 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
     return attributes;
   };
 
-  const generateInsights = (attributes, spatialExtent, totalFeatures) => {
+  const generateInsights = (attributes: { [key: string]: AttributeAnalysis }, spatialExtent: any, totalFeatures: number) => {
     const insights = [];
     
     insights.push(`Dataset contains ${totalFeatures} features with ${Object.keys(attributes).length} attributes`);
@@ -206,7 +216,7 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
     return insights;
   };
 
-  const generateRecommendations = (attributes, dataType) => {
+  const generateRecommendations = (attributes: { [key: string]: AttributeAnalysis }, dataType: string) => {
     const recommendations = [];
     
     const numericCols = Object.entries(attributes).filter(([_, attr]) => attr.type === 'numeric');
@@ -236,7 +246,7 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
     return recommendations;
   };
 
-  const assessDataQuality = (attributes, totalFeatures) => {
+  const assessDataQuality = (attributes: { [key: string]: AttributeAnalysis }, totalFeatures: number) => {
     const issues = [];
     const strengths = [];
     let score = 100;
