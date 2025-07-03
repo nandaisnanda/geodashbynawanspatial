@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -247,7 +246,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                 </CardTitle>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    {chart.type === 'bar' && (
+                    {chart.type === 'bar' ? (
                       <BarChart data={chart.data}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis 
@@ -267,8 +266,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                         />
                         <Bar dataKey={chart.yKey} fill={COLORS[index % COLORS.length]} />
                       </BarChart>
-                    )}
-                    {chart.type === 'pie' && (
+                    ) : chart.type === 'pie' ? (
                       <PieChart>
                         <Pie
                           data={chart.data}
@@ -285,8 +283,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                         </Pie>
                         <Tooltip />
                       </PieChart>
-                    )}
-                    {chart.type === 'line' && (
+                    ) : chart.type === 'line' ? (
                       <LineChart data={chart.data}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey={chart.xKey} tick={{ fontSize: 12 }} />
@@ -294,8 +291,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                         <Tooltip />
                         <Line type="monotone" dataKey={chart.yKey} stroke={COLORS[index % COLORS.length]} strokeWidth={2} />
                       </LineChart>
-                    )}
-                    {chart.type === 'scatter' && (
+                    ) : chart.type === 'scatter' ? (
                       <ScatterChart data={chart.data}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey={chart.xKey} tick={{ fontSize: 12 }} />
@@ -303,7 +299,7 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
                         <Tooltip />
                         <Scatter fill={COLORS[index % COLORS.length]} />
                       </ScatterChart>
-                    )}
+                    ) : null}
                   </ResponsiveContainer>
                 </div>
               </Card>
