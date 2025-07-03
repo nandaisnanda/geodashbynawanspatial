@@ -8,23 +8,50 @@ import DataCharts from '@/components/DataCharts';
 import DataHeaderEditor from '@/components/DataHeaderEditor';
 import SmartAnalytics from '@/components/SmartAnalytics';
 import PDFExport from '@/components/PDFExport';
+import UserDashboard from '@/components/UserDashboard';
 import { initializeAuth } from '@/lib/firebase';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const Index = () => {
   const [data, setData] = useState<any[]>([]);
   const [dataType, setDataType] = useState<string>('');
   const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     initializeAuth();
   }, []);
 
-  const handleDataLoad = (newData: any[], type: string) => {
+  const trackActivity = async (activityType: string, metadata?: any) => {
+    if (!user) return;
+
+    try {
+      await supabase
+        .from('user_activity')
+        .insert({
+          user_id: user.id,
+          activity_type: activityType,
+          metadata: metadata || {}
+        });
+    } catch (error) {
+      console.error('Error tracking activity:', error);
+    }
+  };
+
+  const handleDataLoad = async (newData: any[], type: string) => {
     console.log('Loading data:', { count: newData.length, type });
     setData(newData);
     setDataType(type);
     toast.success(`Loaded ${newData.length} features successfully! Smart analysis initiated.`);
+    
+    // Track file upload activity
+    await trackActivity('file_upload', {
+      file_type: type,
+      feature_count: newData.length,
+      timestamp: new Date().toISOString()
+    });
   };
 
   const handleDataUpdate = (updatedData: any[]) => {
@@ -33,8 +60,15 @@ const Index = () => {
     toast.success('Data updated successfully!');
   };
 
-  const handleAnalyticsUpdate = (analytics: any) => {
+  const handleAnalyticsUpdate = async (analytics: any) => {
     setAnalyticsData(analytics);
+    
+    // Track analysis completion
+    await trackActivity('analysis_complete', {
+      analysis_type: 'smart_analytics',
+      insights_count: analytics?.insights?.length || 0,
+      timestamp: new Date().toISOString()
+    });
   };
 
   return (
@@ -43,6 +77,13 @@ const Index = () => {
       
       <main className="container mx-auto px-6 py-8">
         <div id="dashboard-content" className="space-y-8">
+          {/* User Dashboard Section */}
+          {user && (
+            <div className="animate-fade-in">
+              <UserDashboard />
+            </div>
+          )}
+
           {/* Welcome Section */}
           <div className="text-center space-y-4 animate-fade-in">
             <h2 className="text-3xl font-bold text-foreground">
@@ -67,6 +108,7 @@ const Index = () => {
                 <SmartAnalytics 
                   data={data} 
                   dataType={dataType}
+                  onAnalyticsUpdate={handleAnalyticsUpdate}
                 />
               </div>
 
