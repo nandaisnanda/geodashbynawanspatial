@@ -194,15 +194,15 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
 
   if (!isVisible) {
     return (
-      <Card className="animate-slide-up">
+      <Card className="animate-slide-up shadow-lg border-2 border-gray-200">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Advanced Data Visualizations</CardTitle>
+            <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-200">Advanced Data Visualizations</CardTitle>
             <Button 
               variant="outline" 
               size="sm"
               onClick={() => setIsVisible(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
             >
               <Eye className="h-4 w-4" />
               Show Charts
@@ -214,90 +214,159 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
   }
 
   return (
-    <Card className="animate-slide-up">
-      <CardHeader className="pb-4">
+    <Card className="animate-slide-up shadow-lg border-2 border-indigo-100">
+      <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
+          <CardTitle className="text-xl flex items-center gap-3 font-bold text-indigo-900 dark:text-indigo-100">
+            <BarChart3 className="h-6 w-6 text-indigo-600" />
             Advanced Data Visualizations ({charts.length} charts)
           </CardTitle>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => setIsVisible(false)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
           >
             <EyeOff className="h-4 w-4" />
             Hide Charts
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         {charts.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {charts.map((chart, index) => (
-              <Card key={index} className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
-                <CardTitle className="text-sm mb-4 flex items-center gap-2">
-                  {chart.type === 'bar' && <BarChart3 className="h-4 w-4" />}
-                  {chart.type === 'pie' && <PieChartIcon className="h-4 w-4" />}
-                  {chart.type === 'line' && <TrendingUp className="h-4 w-4" />}
-                  {chart.type === 'scatter' && <Activity className="h-4 w-4" />}
-                  {chart.title}
-                </CardTitle>
-                <div className="h-64">
+              <Card key={index} className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 shadow-md">
+                <div className="mb-6">
+                  <CardTitle className="text-lg mb-2 flex items-center gap-3 font-bold text-gray-800 dark:text-gray-200">
+                    {chart.type === 'bar' && <BarChart3 className="h-5 w-5 text-blue-600" />}
+                    {chart.type === 'pie' && <PieChartIcon className="h-5 w-5 text-green-600" />}
+                    {chart.type === 'line' && <TrendingUp className="h-5 w-5 text-purple-600" />}
+                    {chart.type === 'scatter' && <Activity className="h-5 w-5 text-orange-600" />}
+                    {chart.title}
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    {chart.data.length} data points • {chart.type.charAt(0).toUpperCase() + chart.type.slice(1)} Chart
+                  </p>
+                </div>
+                <div className="h-80 border rounded-lg bg-white dark:bg-gray-800 p-2">
                   <ResponsiveContainer width="100%" height="100%">
                     {chart.type === 'bar' ? (
-                      <BarChart data={chart.data}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <BarChart data={chart.data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                         <XAxis 
                           dataKey={chart.xKey}
-                          tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                          tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))', fontWeight: 500 }}
                           angle={-45}
                           textAnchor="end"
                           height={60}
+                          interval={0}
                         />
-                        <YAxis tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
+                        <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))', fontWeight: 500 }} />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'hsl(var(--card))',
-                            border: '1px solid hsl(var(--border))',
-                            borderRadius: '6px'
+                            border: '2px solid hsl(var(--border))',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 500
                           }}
                         />
-                        <Bar dataKey={chart.yKey} fill={COLORS[index % COLORS.length]} />
+                        <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 500 }} />
+                        <Bar 
+                          dataKey={chart.yKey} 
+                          fill={COLORS[index % COLORS.length]} 
+                          radius={[4, 4, 0, 0]}
+                          stroke={COLORS[index % COLORS.length]}
+                          strokeWidth={1}
+                        />
                       </BarChart>
                     ) : chart.type === 'pie' ? (
-                      <PieChart>
+                      <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                         <Pie
                           data={chart.data}
                           cx="50%"
                           cy="50%"
-                          outerRadius={80}
+                          outerRadius={100}
                           dataKey="value"
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
                           labelLine={false}
+                          stroke="#fff"
+                          strokeWidth={2}
                         >
                           {chart.data.map((entry: any, idx: number) => (
                             <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                           ))}
                         </Pie>
-                        <Tooltip />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))',
+                            border: '2px solid hsl(var(--border))',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 500
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 500 }} />
                       </PieChart>
                     ) : chart.type === 'line' ? (
-                      <LineChart data={chart.data}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey={chart.xKey} tick={{ fontSize: 12 }} />
-                        <YAxis tick={{ fontSize: 12 }} />
-                        <Tooltip />
-                        <Line type="monotone" dataKey={chart.yKey} stroke={COLORS[index % COLORS.length]} strokeWidth={2} />
+                      <LineChart data={chart.data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                        <XAxis 
+                          dataKey={chart.xKey} 
+                          tick={{ fontSize: 11, fontWeight: 500 }} 
+                          angle={-45}
+                          textAnchor="end"
+                          height={60}
+                        />
+                        <YAxis tick={{ fontSize: 11, fontWeight: 500 }} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))',
+                            border: '2px solid hsl(var(--border))',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 500
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 500 }} />
+                        <Line 
+                          type="monotone" 
+                          dataKey={chart.yKey} 
+                          stroke={COLORS[index % COLORS.length]} 
+                          strokeWidth={3}
+                          dot={{ fill: COLORS[index % COLORS.length], strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6, stroke: COLORS[index % COLORS.length], strokeWidth: 2 }}
+                        />
                       </LineChart>
                     ) : chart.type === 'scatter' ? (
-                      <ScatterChart data={chart.data}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey={chart.xKey} tick={{ fontSize: 12 }} />
-                        <YAxis dataKey={chart.yKey} tick={{ fontSize: 12 }} />
-                        <Tooltip />
-                        <Scatter fill={COLORS[index % COLORS.length]} />
+                      <ScatterChart data={chart.data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                        <XAxis 
+                          dataKey={chart.xKey} 
+                          tick={{ fontSize: 11, fontWeight: 500 }} 
+                          type="number"
+                        />
+                        <YAxis 
+                          dataKey={chart.yKey} 
+                          tick={{ fontSize: 11, fontWeight: 500 }} 
+                          type="number"
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))',
+                            border: '2px solid hsl(var(--border))',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 500
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 500 }} />
+                        <Scatter 
+                          fill={COLORS[index % COLORS.length]} 
+                          stroke={COLORS[index % COLORS.length]}
+                          strokeWidth={1}
+                        />
                       </ScatterChart>
                     ) : null}
                   </ResponsiveContainer>
@@ -306,10 +375,10 @@ const DataCharts = ({ data, dataType }: DataChartsProps) => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-lg font-medium mb-2">No charts available</p>
-            <p>Upload data with numeric or categorical attributes to generate automatic visualizations.</p>
+          <div className="text-center py-12 text-muted-foreground">
+            <BarChart3 className="h-16 w-16 mx-auto mb-6 opacity-50" />
+            <p className="text-xl font-semibold mb-3">No charts available</p>
+            <p className="text-base">Upload data with numeric or categorical attributes to generate automatic visualizations.</p>
           </div>
         )}
       </CardContent>

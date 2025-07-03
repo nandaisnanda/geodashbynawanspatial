@@ -289,78 +289,78 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
   if (!data.length) return null;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Brain className="h-5 w-5 text-purple-600" />
-          Smart Data Analytics
-          {isAnalyzing && <div className="animate-spin rounded-full h-4 w-4 border-2 border-purple-600 border-t-transparent"></div>}
+    <Card className="shadow-lg border-2 border-blue-100">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <Brain className="h-6 w-6 text-purple-600" />
+          <span className="font-bold text-gray-800 dark:text-gray-100">Smart Data Analytics</span>
+          {isAnalyzing && <div className="animate-spin rounded-full h-5 w-5 border-2 border-purple-600 border-t-transparent"></div>}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8 p-6">
         {analysis && (
           <>
             {/* Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="p-4">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-blue-600" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 border-blue-200">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-6 w-6 text-blue-600" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Features</p>
-                    <p className="text-2xl font-bold">{analysis.totalFeatures}</p>
+                    <p className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Features</p>
+                    <p className="text-3xl font-bold text-blue-900 dark:text-blue-100">{analysis.totalFeatures}</p>
                   </div>
                 </div>
               </Card>
-              <Card className="p-4">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-green-600" />
+              <Card className="p-5 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 border-green-200">
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="h-6 w-6 text-green-600" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Attributes</p>
-                    <p className="text-2xl font-bold">{Object.keys(analysis.attributeAnalysis).length}</p>
+                    <p className="text-sm font-medium text-green-700 dark:text-green-300">Attributes</p>
+                    <p className="text-3xl font-bold text-green-900 dark:text-green-100">{Object.keys(analysis.attributeAnalysis).length}</p>
                   </div>
                 </div>
               </Card>
-              <Card className="p-4">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-purple-600" />
+              <Card className="p-5 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 border-purple-200">
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="h-6 w-6 text-purple-600" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Data Quality</p>
-                    <div className="flex items-center gap-2">
-                      <Progress value={analysis.dataQuality.score} className="w-16" />
-                      <span className="text-lg font-bold">{analysis.dataQuality.score}%</span>
+                    <p className="text-sm font-medium text-purple-700 dark:text-purple-300">Data Quality</p>
+                    <div className="flex items-center gap-3">
+                      <Progress value={analysis.dataQuality.score} className="w-20 h-2" />
+                      <span className="text-2xl font-bold text-purple-900 dark:text-purple-100">{analysis.dataQuality.score}%</span>
                     </div>
                   </div>
                 </div>
               </Card>
             </div>
 
-            {/* Insights */}
-            <div>
-              <h4 className="font-semibold mb-3 flex items-center gap-2">
-                <Brain className="h-4 w-4" />
+            {/* Key Insights */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 p-6 rounded-xl border-2 border-blue-200">
+              <h4 className="text-xl font-bold mb-4 flex items-center gap-3 text-blue-900 dark:text-blue-100">
+                <Brain className="h-5 w-5 text-blue-600" />
                 Key Insights
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {analysis.insights.map((insight, index) => (
-                  <div key={index} className="flex items-start gap-2 p-2 bg-blue-50 rounded-lg">
-                    <CheckCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">{insight}</p>
+                  <div key={index} className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg border border-blue-200 shadow-sm">
+                    <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-base font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{insight}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Recommendations */}
-            <div>
-              <h4 className="font-semibold mb-3 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 p-6 rounded-xl border-2 border-green-200">
+              <h4 className="text-xl font-bold mb-4 flex items-center gap-3 text-green-900 dark:text-green-100">
+                <TrendingUp className="h-5 w-5 text-green-600" />
                 Recommendations
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {analysis.recommendations.map((rec, index) => (
-                  <div key={index} className="flex items-start gap-2 p-2 bg-green-50 rounded-lg">
-                    <AlertCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">{rec}</p>
+                  <div key={index} className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg border border-green-200 shadow-sm">
+                    <AlertCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-base font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{rec}</p>
                   </div>
                 ))}
               </div>
@@ -368,15 +368,15 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
 
             {/* Data Quality Details */}
             {(analysis.dataQuality.issues.length > 0 || analysis.dataQuality.strengths.length > 0) && (
-              <div>
-                <h4 className="font-semibold mb-3">Data Quality Assessment</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-950 dark:to-slate-950 p-6 rounded-xl border-2 border-gray-200">
+                <h4 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Data Quality Assessment</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {analysis.dataQuality.strengths.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-medium text-green-700 mb-2">Strengths</h5>
-                      <div className="space-y-1">
+                      <h5 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3">Strengths</h5>
+                      <div className="space-y-2">
                         {analysis.dataQuality.strengths.map((strength, index) => (
-                          <Badge key={index} variant="secondary" className="bg-green-100 text-green-800">
+                          <Badge key={index} variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-3 py-1 text-sm font-medium">
                             {strength}
                           </Badge>
                         ))}
@@ -385,10 +385,10 @@ const SmartAnalytics = ({ data, dataType }: SmartAnalyticsProps) => {
                   )}
                   {analysis.dataQuality.issues.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-medium text-red-700 mb-2">Issues</h5>
-                      <div className="space-y-1">
+                      <h5 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-3">Issues</h5>
+                      <div className="space-y-2">
                         {analysis.dataQuality.issues.map((issue, index) => (
-                          <Badge key={index} variant="destructive" className="bg-red-100 text-red-800">
+                          <Badge key={index} variant="destructive" className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 px-3 py-1 text-sm font-medium">
                             {issue}
                           </Badge>
                         ))}
