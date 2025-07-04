@@ -29,15 +29,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        if (!mounted) return;
+        
         console.log('Auth state changed:', event, session?.user?.email);
-        setSession(session);
-        setUser(session?.user ?? null);
+        
+        if (session) {
+          setSession(session);
+          setUser(session.user);
+        } else {
+          setSession(null);
+          setUser(null);
+        }
+        
         setLoading(false);
         
-        // Track user activity for sign in events
+        // Track user activity for sign in events (with delay to avoid blocking)
         if (session?.user && event === 'SIGNED_IN') {
           setTimeout(() => {
             trackActivity('sign_in');
@@ -46,27 +57,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Then get initial session
+    // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
+        if (!mounted) return;
+        
         if (error) {
           console.error('Error getting session:', error);
-        } else {
-          console.log('Initial session:', session?.user?.email);
-          setSession(session);
-          setUser(session?.user ?? null);
+          setLoading(false);
+          return;
         }
+        
+        console.log('Initial session:', session?.user?.email);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
       } catch (error) {
         console.error('Error in getInitialSession:', error);
-      } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     getInitialSession();
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -90,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/` : 'https://your-app.vercel.app/';
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -106,12 +124,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Sign up error:', error);
         toast.error(error.message);
+        return { error };
       } else {
         console.log('Sign up successful:', data);
         toast.success('Check your email to confirm your account!');
+        return { error: null };
       }
-
-      return { error };
     } catch (error) {
       console.error('Sign up exception:', error);
       toast.error('An unexpected error occurred');
@@ -132,12 +150,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Sign in error:', error);
         toast.error(error.message);
+        return { error };
       } else {
         console.log('Sign in successful:', data);
         toast.success('Welcome back!');
+        return { error: null };
       }
-
-      return { error };
     } catch (error) {
       console.error('Sign in exception:', error);
       toast.error('An unexpected error occurred');
@@ -149,7 +167,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await trackActivity('sign_out');
+      if (user) {
+        await trackActivity('sign_out');
+      }
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);

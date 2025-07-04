@@ -42,7 +42,6 @@ const Auth = () => {
       
       if (!error) {
         console.log('Sign in successful, navigating to /');
-        navigate('/', { replace: true });
       }
     } catch (error) {
       console.error('Sign in error:', error);
