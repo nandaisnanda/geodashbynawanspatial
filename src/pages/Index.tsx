@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import FileUpload from '@/components/FileUpload';
@@ -7,6 +6,7 @@ import AttributeTable from '@/components/AttributeTable';
 import DataCharts from '@/components/DataCharts';
 import DataHeaderEditor from '@/components/DataHeaderEditor';
 import SmartAnalytics from '@/components/SmartAnalytics';
+import AdvancedVisualizations from '@/components/AdvancedVisualizations';
 import PDFExport from '@/components/PDFExport';
 import UserDashboard from '@/components/UserDashboard';
 import { initializeAuth } from '@/lib/firebase';
@@ -117,6 +117,14 @@ const Index = () => {
                   data={data} 
                   dataType={dataType}
                   onAnalyticsUpdate={handleAnalyticsUpdate}
+                />
+              </section>
+
+              {/* Advanced Visualizations Section */}
+              <section className="animate-fade-in-up animate-delay-350">
+                <AdvancedVisualizations 
+                  data={data} 
+                  dataType={dataType}
                 />
               </section>
 
