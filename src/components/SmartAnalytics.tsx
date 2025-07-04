@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Brain, TrendingUp, AlertTriangle, CheckCircle, BarChart3, PieChart, Target, Lightbulb } from 'lucide-react';
+import { Brain, TrendingUp, AlertTriangle, CheckCircle, BarChart3, Target, Lightbulb } from 'lucide-react';
 
 interface SmartAnalyticsProps {
   data: any[];
@@ -105,26 +105,34 @@ const SmartAnalytics: React.FC<SmartAnalyticsProps> = ({ data, dataType, onAnaly
 
   if (loading) {
     return (
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 border-purple-200 dark:border-purple-800">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
-            <Brain className="h-6 w-6 text-purple-600 animate-pulse" />
+      <Card className="border border-purple-200 bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 dark:from-purple-950/50 dark:via-blue-950/50 dark:to-cyan-950/50 shadow-lg">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-xl font-bold text-gray-800 dark:text-gray-100">
+            <div className="p-2 bg-purple-600 rounded-lg shadow-md">
+              <Brain className="h-6 w-6 text-white animate-pulse" />
+            </div>
             🤖 AI Smart Analytics Engine
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
             Analyzing your geospatial data with advanced AI algorithms...
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-              <span className="text-lg font-medium">Processing {data.length} features...</span>
+        <CardContent className="pt-0">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="animate-spin rounded-full h-10 w-10 border-4 border-purple-200 border-t-purple-600"></div>
+              <div className="flex-1">
+                <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Processing {data.length} features...
+                </p>
+                <Progress value={75} className="h-3 bg-gray-200" />
+              </div>
             </div>
-            <Progress value={75} className="h-3" />
-            <p className="text-muted-foreground">
-              Running statistical analysis, pattern detection, and data quality assessment
-            </p>
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+              <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                Running statistical analysis, pattern detection, and data quality assessment
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -133,57 +141,77 @@ const SmartAnalytics: React.FC<SmartAnalyticsProps> = ({ data, dataType, onAnaly
 
   if (!analytics) return null;
 
+  const getQualityColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    return 'text-red-600 bg-red-50 border-red-200';
+  };
+
+  const getQualityBadgeVariant = (score: number) => {
+    if (score >= 80) return 'default';
+    if (score >= 60) return 'secondary';
+    return 'destructive';
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 border-purple-200 dark:border-purple-800">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
-            <Brain className="h-6 w-6 text-purple-600" />
+    <div className="space-y-6">
+      {/* Main Header Card */}
+      <Card className="border border-purple-200 bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 dark:from-purple-950/50 dark:via-blue-950/50 dark:to-cyan-950/50 shadow-lg">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-xl font-bold text-gray-800 dark:text-gray-100">
+            <div className="p-2 bg-purple-600 rounded-lg shadow-md">
+              <Brain className="h-6 w-6 text-white" />
+            </div>
             🤖 AI Smart Analytics Results
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
             Advanced insights and recommendations for your {analytics.dataType} dataset
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
+
+        <CardContent className="pt-0">
+          <div className="grid lg:grid-cols-2 gap-8">
             {/* Data Quality Score */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <Target className="h-5 w-5 text-green-600" />
+                <h4 className="font-bold text-lg flex items-center gap-2 text-gray-800 dark:text-gray-100">
+                  <Target className="h-5 w-5 text-purple-600" />
                   Data Quality Score
                 </h4>
-                <Badge variant={analytics.qualityScore >= 80 ? "default" : analytics.qualityScore >= 60 ? "secondary" : "destructive"}>
+                <Badge variant={getQualityBadgeVariant(analytics.qualityScore)} className="text-sm font-bold px-3 py-1">
                   {analytics.qualityScore}/100
                 </Badge>
               </div>
-              <Progress value={analytics.qualityScore} className="h-3" />
-              <p className="text-sm text-muted-foreground">
-                {analytics.qualityScore >= 80 ? "Excellent data quality!" : 
-                 analytics.qualityScore >= 60 ? "Good data quality with room for improvement" : 
-                 "Data quality needs attention"}
-              </p>
+              <div className="space-y-3">
+                <Progress value={analytics.qualityScore} className="h-4 bg-gray-200" />
+                <div className={`p-3 rounded-lg border ${getQualityColor(analytics.qualityScore)}`}>
+                  <p className="text-sm font-medium">
+                    {analytics.qualityScore >= 80 ? "Excellent data quality!" : 
+                     analytics.qualityScore >= 60 ? "Good data quality with room for improvement" : 
+                     "Data quality needs attention"}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Attribute Summary */}
+            {/* Attribute Analysis */}
             <div className="space-y-4">
-              <h4 className="font-semibold text-lg flex items-center gap-2">
+              <h4 className="font-bold text-lg flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <BarChart3 className="h-5 w-5 text-blue-600" />
                 Attribute Analysis
               </h4>
               <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{analytics.attributes.total}</div>
-                  <div className="text-sm text-muted-foreground">Total</div>
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/50 rounded-xl border border-blue-200 dark:border-blue-800">
+                  <div className="text-3xl font-bold text-blue-600 mb-1">{analytics.attributes.total}</div>
+                  <div className="text-sm font-medium text-blue-700 dark:text-blue-300">Total</div>
                 </div>
-                <div className="text-center p-3 bg-green-50 dark:bg-green-950 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{analytics.attributes.numeric}</div>
-                  <div className="text-sm text-muted-foreground">Numeric</div>
+                <div className="text-center p-4 bg-green-50 dark:bg-green-950/50 rounded-xl border border-green-200 dark:border-green-800">
+                  <div className="text-3xl font-bold text-green-600 mb-1">{analytics.attributes.numeric}</div>
+                  <div className="text-sm font-medium text-green-700 dark:text-green-300">Numeric</div>
                 </div>
-                <div className="text-center p-3 bg-purple-50 dark:bg-purple-950 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{analytics.attributes.categorical}</div>
-                  <div className="text-sm text-muted-foreground">Categorical</div>
+                <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/50 rounded-xl border border-purple-200 dark:border-purple-800">
+                  <div className="text-3xl font-bold text-purple-600 mb-1">{analytics.attributes.categorical}</div>
+                  <div className="text-sm font-medium text-purple-700 dark:text-purple-300">Categorical</div>
                 </div>
               </div>
             </div>
@@ -192,19 +220,19 @@ const SmartAnalytics: React.FC<SmartAnalyticsProps> = ({ data, dataType, onAnaly
       </Card>
 
       {/* Key Insights */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
+      <Card className="border border-blue-200 shadow-md">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-gray-100">
             <TrendingUp className="h-5 w-5 text-blue-600" />
             Key Insights
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <div className="space-y-3">
             {analytics.insights.map((insight: string, index: number) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+              <div key={index} className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-100 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors">
                 <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <p className="text-base font-medium">{insight}</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">{insight}</p>
               </div>
             ))}
           </div>
@@ -212,19 +240,19 @@ const SmartAnalytics: React.FC<SmartAnalyticsProps> = ({ data, dataType, onAnaly
       </Card>
 
       {/* Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-bold">
+      <Card className="border border-yellow-200 shadow-md">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-gray-100">
             <Lightbulb className="h-5 w-5 text-yellow-600" />
             Recommendations
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <div className="space-y-3">
             {analytics.recommendations.map((recommendation: string, index: number) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+              <div key={index} className="flex items-start gap-3 p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-100 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-950/50 transition-colors">
                 <Lightbulb className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-                <p className="text-base font-medium">{recommendation}</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">{recommendation}</p>
               </div>
             ))}
           </div>
@@ -233,28 +261,33 @@ const SmartAnalytics: React.FC<SmartAnalyticsProps> = ({ data, dataType, onAnaly
 
       {/* Missing Data Analysis */}
       {analytics.missingData.some((item: any) => item.percentage > 0) && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg font-bold">
+        <Card className="border border-orange-200 shadow-md">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-gray-100">
               <AlertTriangle className="h-5 w-5 text-orange-600" />
               Missing Data Analysis
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <div className="space-y-3">
               {analytics.missingData
                 .filter((item: any) => item.percentage > 0)
                 .sort((a: any, b: any) => b.percentage - a.percentage)
                 .slice(0, 10)
                 .map((item: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-950 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-4 bg-orange-50 dark:bg-orange-950/30 rounded-lg border border-orange-100 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-950/50 transition-colors">
                     <div className="flex items-center gap-3">
-                      <AlertTriangle className="h-4 w-4 text-orange-600" />
-                      <span className="font-medium">{item.attribute}</span>
+                      <AlertTriangle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                      <span className="font-semibold text-gray-700 dark:text-gray-300">{item.attribute}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Progress value={item.percentage} className="w-20 h-2" />
-                      <Badge variant={item.percentage > 50 ? "destructive" : item.percentage > 20 ? "secondary" : "outline"}>
+                    <div className="flex items-center gap-4">
+                      <div className="w-24">
+                        <Progress value={item.percentage} className="h-2 bg-orange-100" />
+                      </div>
+                      <Badge 
+                        variant={item.percentage > 50 ? "destructive" : item.percentage > 20 ? "secondary" : "outline"}
+                        className="font-bold min-w-[60px] text-center"
+                      >
                         {item.percentage.toFixed(1)}%
                       </Badge>
                     </div>
