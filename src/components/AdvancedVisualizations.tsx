@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -138,17 +139,17 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
 
   const getCorrelationColor = (strength: string) => {
     switch (strength) {
-      case 'Strong': return 'bg-green-50 border-green-200 text-green-700';
-      case 'Moderate': return 'bg-yellow-50 border-yellow-200 text-yellow-700';
-      default: return 'bg-gray-50 border-gray-200 text-gray-700';
+      case 'Strong': return 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300 shadow-sm';
+      case 'Moderate': return 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-sm';
+      default: return 'bg-gradient-to-br from-gray-50 to-slate-50 border-gray-300 shadow-sm';
     }
   };
 
   const getCorrelationBadge = (strength: string) => {
     switch (strength) {
-      case 'Strong': return 'default';
-      case 'Moderate': return 'secondary';
-      default: return 'outline';
+      case 'Strong': return 'bg-green-600 text-white hover:bg-green-700';
+      case 'Moderate': return 'bg-yellow-600 text-white hover:bg-yellow-700';
+      default: return 'bg-gray-500 text-white hover:bg-gray-600';
     }
   };
 
@@ -280,8 +281,8 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
                         />
                       ))}
                     </LineChart>
-                  </CardContent>
-                </Card>
+                  </ResponsiveContainer>
+                </CardContent>
               </Card>
             </TabsContent>
 
@@ -343,10 +344,10 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
                   <CardHeader className="pb-4">
                     <CardTitle className="text-lg flex items-center gap-2 text-gray-800 dark:text-gray-100">
                       <Activity className="h-5 w-5 text-blue-600" />
-                      Correlation Analysis
+                      🔗 Correlation Analysis
                     </CardTitle>
                     <CardDescription className="text-gray-600 dark:text-gray-300">
-                      Statistical relationships between variables
+                      Statistical relationships between variables with enhanced visualization
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -357,39 +358,39 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
                           .map((corr, index) => (
                             <div 
                               key={index} 
-                              className={`flex items-center justify-between p-4 rounded-lg border transition-all hover:shadow-md ${getCorrelationColor(corr.strength)}`}
+                              className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${getCorrelationColor(corr.strength)}`}
                             >
                               <div className="flex-1 min-w-0">
-                                <div className="font-semibold text-sm truncate mb-1">
-                                  {corr.attr1} × {corr.attr2}
+                                <div className="font-bold text-sm truncate mb-2 text-gray-800">
+                                  📊 {corr.attr1} × {corr.attr2}
                                 </div>
-                                <div className="text-xs opacity-75">
-                                  Correlation Coefficient
+                                <div className="text-xs text-gray-600 font-medium">
+                                  Correlation Coefficient • {corr.strength} Relationship
                                 </div>
                               </div>
                               <div className="flex items-center gap-3 ml-4">
                                 <Badge 
-                                  variant={getCorrelationBadge(corr.strength)}
-                                  className="font-medium"
+                                  className={`font-bold text-xs px-3 py-1 ${getCorrelationBadge(corr.strength)}`}
                                 >
-                                  {corr.strength}
+                                  {corr.strength.toUpperCase()}
                                 </Badge>
                                 <div className="text-right">
-                                  <div className="font-mono text-lg font-bold">
+                                  <div className="font-mono text-xl font-bold text-gray-900">
                                     {corr.correlation}
                                   </div>
-                                  <div className="text-xs opacity-75">
-                                    {Math.abs(corr.correlation * 100).toFixed(1)}%
+                                  <div className="text-xs text-gray-600 font-medium">
+                                    {Math.abs(corr.correlation * 100).toFixed(1)}% strength
                                   </div>
                                 </div>
                               </div>
                             </div>
                           ))
                       ) : (
-                        <div className="text-center py-8 text-gray-500">
-                          <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                          <p>No correlations to display</p>
+                        <div className="text-center py-12 text-gray-500">
+                          <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <h3 className="text-lg font-semibold mb-2">No Correlations Available</h3>
                           <p className="text-sm">Need numeric data for correlation analysis</p>
+                          <p className="text-xs text-gray-400 mt-1">Upload data with numeric attributes to see correlations</p>
                         </div>
                       )}
                     </div>
