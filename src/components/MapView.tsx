@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import { Card } from '@/components/ui/card';
@@ -362,8 +361,8 @@ const MapView = ({ data, dataType }: MapViewProps) => {
         style={{ minHeight: '500px' }}
       />
       
-      {/* Enhanced custom CSS for popups */}
-      <style jsx global>{`
+      {/* Fixed custom CSS for popups */}
+      <style>{`
         .custom-popup .leaflet-popup-content-wrapper {
           border-radius: 8px;
           box-shadow: 0 10px 25px rgba(0,0,0,0.1);
