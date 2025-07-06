@@ -1,4 +1,6 @@
 
+import L from 'leaflet';
+
 export interface MapViewProps {
   data: any[];
   dataType: string;
