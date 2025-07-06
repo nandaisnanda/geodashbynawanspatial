@@ -21,7 +21,7 @@ const MapView = ({ data, dataType }: MapViewProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const dataLayerRef = useRef<L.LayerGroup | null>(null);
-  const [selectedBasemap, setSelectedBasemap] = useState('Streets');
+  const [selectedBasemap, setSelectedBasemap] = useState('OpenStreetMap');
   const [isLoading, setIsLoading] = useState(false);
   const [mapStats, setMapStats] = useState<MapStatsType>({ features: 0, type: '', bounds: null });
 

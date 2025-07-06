@@ -184,12 +184,13 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsList className="grid w-full grid-cols-6 mb-6">
               <TabsTrigger value="overview" className="text-sm">Overview</TabsTrigger>
               <TabsTrigger value="trends" className="text-sm">Trends</TabsTrigger>
               <TabsTrigger value="distribution" className="text-sm">Distribution</TabsTrigger>
               <TabsTrigger value="relationships" className="text-sm">Relationships</TabsTrigger>
               <TabsTrigger value="advanced" className="text-sm">Advanced</TabsTrigger>
+              <TabsTrigger value="interactive" className="text-sm">Interactive</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
@@ -504,6 +505,174 @@ const AdvancedVisualizations: React.FC<AdvancedVisualizationsProps> = ({ data, d
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="interactive" className="space-y-6">
+              <div className="grid lg:grid-cols-2 gap-6">
+                <Card className="border border-indigo-200 shadow-md">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg flex items-center gap-2 text-gray-800 dark:text-gray-100">
+                      <BarChart3 className="h-5 w-5 text-indigo-600" />
+                      📊 Dynamic Chart Builder
+                    </CardTitle>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Chart Type</label>
+                        <Select defaultValue="bar">
+                          <SelectTrigger className="h-9">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="bar">Bar Chart</SelectItem>
+                            <SelectItem value="line">Line Chart</SelectItem>
+                            <SelectItem value="area">Area Chart</SelectItem>
+                            <SelectItem value="scatter">Scatter Plot</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Data Points</label>
+                        <Select defaultValue="10">
+                          <SelectTrigger className="h-9">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="5">Top 5</SelectItem>
+                            <SelectItem value="10">Top 10</SelectItem>
+                            <SelectItem value="20">Top 20</SelectItem>
+                            <SelectItem value="all">All Data</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Primary Variable</label>
+                        <Select value={selectedXAxis} onValueChange={setSelectedXAxis}>
+                          <SelectTrigger className="h-9">
+                            <SelectValue placeholder="Select variable" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {allAttrs.map((attr) => (
+                              <SelectItem key={attr} value={attr}>{attr}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Secondary Variable</label>
+                        <Select value={selectedYAxis} onValueChange={setSelectedYAxis}>
+                          <SelectTrigger className="h-9">
+                            <SelectValue placeholder="Select variable" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {allAttrs.map((attr) => (
+                              <SelectItem key={attr} value={attr}>{attr}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData.slice(0, 10)}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis 
+                          dataKey={selectedXAxis} 
+                          tick={{ fontSize: 10 }}
+                          stroke="#6b7280"
+                          angle={-45}
+                          textAnchor="end"
+                          height={60}
+                        />
+                        <YAxis 
+                          dataKey={selectedYAxis}
+                          tick={{ fontSize: 10 }}
+                          stroke="#6b7280"
+                        />
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: 'white',
+                            border: '1px solid #e5e7eb',
+                            borderRadius: '8px',
+                            fontSize: '12px'
+                          }}
+                        />
+                        <Bar 
+                          dataKey={selectedYAxis} 
+                          fill="#6366f1"
+                          radius={[4, 4, 0, 0]}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-emerald-200 shadow-md">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg flex items-center gap-2 text-gray-800 dark:text-gray-100">
+                      <Activity className="h-5 w-5 text-emerald-600" />
+                      🎯 Smart Filtering & Analysis
+                    </CardTitle>
+                    <div className="space-y-3 mt-4">
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Filter by Category</label>
+                        <Select defaultValue="all">
+                          <SelectTrigger className="h-9">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            {categoricalAttrs.slice(0, 3).map((attr) => (
+                              <SelectItem key={attr} value={attr}>{attr}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 mb-2 block">Statistical Analysis</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Badge variant="outline" className="justify-center py-2">
+                            📈 Trend Detection
+                          </Badge>
+                          <Badge variant="outline" className="justify-center py-2">
+                            🔍 Outlier Analysis
+                          </Badge>
+                          <Badge variant="outline" className="justify-center py-2">
+                            📊 Distribution Test
+                          </Badge>
+                          <Badge variant="outline" className="justify-center py-2">
+                            🎯 Clustering
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                        <h4 className="font-semibold text-sm text-emerald-800 dark:text-emerald-200 mb-2">
+                          🤖 AI Insights
+                        </h4>
+                        <p className="text-xs text-emerald-700 dark:text-emerald-300">
+                          Advanced pattern recognition reveals {numericAttrs.length} quantitative dimensions 
+                          with {categoricalAttrs.length} categorical groupings. 
+                          Recommended analysis: Multi-dimensional clustering with {data.length} data points.
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/50 rounded-lg">
+                          <div className="text-2xl font-bold text-blue-600 mb-1">{data.length}</div>
+                          <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Data Points</div>
+                        </div>
+                        <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/50 rounded-lg">
+                          <div className="text-2xl font-bold text-purple-600 mb-1">{numericAttrs.length + categoricalAttrs.length}</div>
+                          <div className="text-xs font-medium text-purple-700 dark:text-purple-300">Variables</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>

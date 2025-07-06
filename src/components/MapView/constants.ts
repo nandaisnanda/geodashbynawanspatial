@@ -2,29 +2,16 @@
 import { BasemapsConfig } from './types';
 
 export const BASEMAPS: BasemapsConfig = {
-  Streets: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 19, attribution: '© Esri' }
-  },
-  Satellite: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 19, attribution: '© Esri' }
-  },
-  Terrain: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 19, attribution: '© Esri' }
-  },
-  'Dark Canvas': {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 16, attribution: '© Esri' }
-  },
-  'Light Gray': {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 16, attribution: '© Esri' }
-  },
   OpenStreetMap: {
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: { maxZoom: 19, attribution: '© OpenStreetMap contributors' }
+    options: {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors',
+      detectRetina: true,
+      updateWhenIdle: false,
+      keepBuffer: 2,
+      updateWhenZooming: false
+    }
   }
 };
 
