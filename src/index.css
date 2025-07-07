@@ -5,8 +5,6 @@
 
 /* Import Leaflet CSS */
 @import 'leaflet/dist/leaflet.css';
-@import 'leaflet.markercluster/dist/MarkerCluster.css';
-@import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 /* Enhanced design system for Geodash */
 @layer base {
@@ -290,65 +288,4 @@
 
 .card-gradient {
   @apply bg-gradient-to-br from-card to-muted/50 border border-border/50 rounded-xl p-6 hover-lift;
-}
-
-/* Map cluster styles */
-.custom-cluster-icon {
-  background: transparent !important;
-  border: none !important;
-}
-
-.cluster-marker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: white;
-  font-weight: bold;
-  font-size: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-
-.cluster-marker:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.cluster-small {
-  background: hsl(var(--primary));
-  width: 30px;
-  height: 30px;
-}
-
-.cluster-medium {
-  background: hsl(var(--accent));
-  width: 35px;
-  height: 35px;
-}
-
-.cluster-large {
-  background: hsl(200, 100%, 30%);
-  width: 40px;
-  height: 40px;
-}
-
-/* Enhanced leaflet popup styles */
-.custom-popup .leaflet-popup-content-wrapper {
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--card));
-}
-
-.custom-popup .leaflet-popup-tip {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background: hsl(var(--card));
-}
-
-.custom-popup .leaflet-popup-content {
-  color: hsl(var(--foreground));
-  margin: 0;
-  line-height: 1.4;
 }

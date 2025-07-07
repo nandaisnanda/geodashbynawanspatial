@@ -32,7 +32,7 @@ export const useMapData = (
       let mapBounds: L.LatLngBounds | null = null;
 
       if (dataType === 'csv') {
-        const markers: L.CircleMarker[] = [];
+        const markers: L.Marker[] = [];
         const validData = data.filter(row => {
           const { latCol, lonCol } = findCoordinateColumns(row);
           
@@ -61,7 +61,7 @@ export const useMapData = (
         });
 
         if (markers.length > 0) {
-          const group = L.featureGroup(markers);
+          const group = new L.featureGroup(markers);
           mapBounds = group.getBounds();
           mapRef.current.fitBounds(mapBounds, { 
             padding: [20, 20],
