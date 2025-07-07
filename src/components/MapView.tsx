@@ -6,6 +6,7 @@ import MapControls from './MapView/MapControls';
 import MapStats from './MapView/MapStats';
 import { useMapSetup } from './MapView/hooks/useMapSetup';
 import { useMapData } from './MapView/hooks/useMapData';
+import { useMapPerformance } from './MapView/hooks/useMapPerformance';
 import { BASEMAPS, TILE_LAYER_OPTIONS } from './MapView/constants';
 import { MapViewProps, MapStats as MapStatsType } from './MapView/types';
 
@@ -27,6 +28,9 @@ const MapView = ({ data, dataType }: MapViewProps) => {
 
   // Initialize map
   useMapSetup(mapContainerRef, mapRef, dataLayerRef, selectedBasemap);
+
+  // Handle performance optimization with clustering
+  useMapPerformance(mapRef, dataLayerRef, data, dataType);
 
   // Handle data rendering
   useMapData(mapRef, dataLayerRef, data, dataType, setIsLoading, setMapStats);
