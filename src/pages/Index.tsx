@@ -7,6 +7,8 @@ import DataCharts from '@/components/DataCharts';
 import DataHeaderEditor from '@/components/DataHeaderEditor';
 import SmartAnalytics from '@/components/SmartAnalytics';
 import AdvancedVisualizations from '@/components/AdvancedVisualizations';
+import SmartFiltering from '@/components/SmartFiltering';
+import DynamicChartBuilder from '@/components/DynamicChartBuilder';
 import PDFExport from '@/components/PDFExport';
 import UserDashboard from '@/components/UserDashboard';
 import { initializeAuth } from '@/lib/firebase';
@@ -18,6 +20,8 @@ const Index = () => {
   const [data, setData] = useState<any[]>([]);
   const [dataType, setDataType] = useState<string>('');
   const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [analysisResults, setAnalysisResults] = useState<any>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -43,6 +47,7 @@ const Index = () => {
   const handleDataLoad = async (newData: any[], type: string) => {
     console.log('Loading data:', { count: newData.length, type });
     setData(newData);
+    setFilteredData(newData);
     setDataType(type);
     toast.success(`Loaded ${newData.length} features successfully! Smart analysis initiated.`);
     
@@ -111,34 +116,51 @@ const Index = () => {
           {/* Main Dashboard Content */}
           {data.length > 0 && (
             <div className="space-y-12">
-              {/* Smart Analytics Section */}
+              {/* Smart Filtering & Analysis Section */}
               <section className="animate-fade-in-up animate-delay-300">
+                <SmartFiltering 
+                  data={data}
+                  onFilteredData={setFilteredData}
+                  onAnalysisResults={setAnalysisResults}
+                />
+              </section>
+
+              {/* Smart Analytics Section */}
+              <section className="animate-fade-in-up animate-delay-350">
                 <SmartAnalytics 
-                  data={data} 
+                  data={filteredData} 
                   dataType={dataType}
                   onAnalyticsUpdate={handleAnalyticsUpdate}
                 />
               </section>
 
+              {/* Dynamic Chart Builder Section */}
+              <section className="animate-fade-in-up animate-delay-400">
+                <DynamicChartBuilder 
+                  data={filteredData} 
+                  dataType={dataType}
+                />
+              </section>
+
               {/* Advanced Visualizations Section */}
-              <section className="animate-fade-in-up animate-delay-350">
+              <section className="animate-fade-in-up animate-delay-450">
                 <AdvancedVisualizations 
-                  data={data} 
+                  data={filteredData} 
                   dataType={dataType}
                 />
               </section>
 
               {/* Data Header Editor */}
-              <section className="animate-fade-in-up animate-delay-400">
+              <section className="animate-fade-in-up animate-delay-500">
                 <DataHeaderEditor 
-                  data={data} 
+                  data={filteredData} 
                   dataType={dataType} 
                   onDataUpdate={handleDataUpdate}
                 />
               </section>
 
               {/* Enhanced Map Section */}
-              <section className="animate-fade-in-up animate-delay-500" id="map-section" data-section="map">
+              <section className="animate-fade-in-up animate-delay-600" id="map-section" data-section="map">
                 <div className="mb-6">
                   <h3 className="text-3xl font-bold mb-2 flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg">
@@ -147,29 +169,29 @@ const Index = () => {
                     High-Performance Interactive Map
                   </h3>
                   <p className="text-muted-foreground text-lg">
-                    Explore your geospatial data with premium basemaps and interactive features
+                    Explore your geospatial data with clustering and fast OpenStreetMap rendering
                   </p>
                 </div>
-                <MapView data={data} dataType={dataType} />
+                <MapView data={filteredData} dataType={dataType} />
               </section>
 
               {/* Charts Section */}
-              <section className="animate-fade-in-up animate-delay-600" data-section="charts">
-                <DataCharts data={data} dataType={dataType} />
+              <section className="animate-fade-in-up animate-delay-700" data-section="charts">
+                <DataCharts data={filteredData} dataType={dataType} />
               </section>
 
               {/* Attribute Table Section */}
-              <section className="animate-fade-in-up animate-delay-700">
+              <section className="animate-fade-in-up animate-delay-800">
                 <AttributeTable 
-                  data={data} 
+                  data={filteredData} 
                   dataType={dataType} 
                   onDataUpdate={handleDataUpdate}
                 />
               </section>
 
               {/* PDF Export Section */}
-              <section className="animate-fade-in-up animate-delay-800">
-                <PDFExport data={data} analysisData={analyticsData} />
+              <section className="animate-fade-in-up animate-delay-900">
+                <PDFExport data={filteredData} analysisData={analyticsData} />
               </section>
             </div>
           )}
