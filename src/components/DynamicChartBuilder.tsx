@@ -62,7 +62,7 @@ const DynamicChartBuilder: React.FC<DynamicChartBuilderProps> = ({ data, dataTyp
   }, [data]);
 
   const aggregatedData = useMemo(() => {
-    if (!groupBy || !yAxis || !chartData.length) return chartData;
+    if (!groupBy || groupBy === 'none' || !yAxis || !chartData.length) return chartData;
 
     const grouped = chartData.reduce((acc, item) => {
       const key = item[groupBy] || 'Unknown';
@@ -269,7 +269,7 @@ const DynamicChartBuilder: React.FC<DynamicChartBuilderProps> = ({ data, dataTyp
                     <SelectValue placeholder="Optional" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {categoricalAttrs.map(attr => (
                       <SelectItem key={attr} value={attr}>{attr}</SelectItem>
                     ))}
