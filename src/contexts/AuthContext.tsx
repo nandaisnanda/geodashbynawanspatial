@@ -10,6 +10,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithPhone: (phone: string) => Promise<{ error: any }>;
+  verifyOtp: (phone: string, token: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -165,6 +167,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signInWithPhone = async (phone: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOtp({
+        phone,
+        options: {
+          channel: 'sms'
+        }
+      });
+
+      if (error) {
+        console.error('Phone sign in error:', error);
+        toast.error(error.message);
+        return { error };
+      } else {
+        console.log('Phone OTP sent successfully');
+        toast.success('Verification code sent to your phone!');
+        return { error: null };
+      }
+    } catch (error) {
+      console.error('Phone sign in exception:', error);
+      toast.error('An unexpected error occurred');
+      return { error };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyOtp = async (phone: string, token: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.verifyOtp({
+        phone,
+        token,
+        type: 'sms'
+      });
+
+      if (error) {
+        console.error('OTP verification error:', error);
+        toast.error(error.message);
+        return { error };
+      } else {
+        console.log('OTP verification successful');
+        toast.success('Welcome! Phone verification successful.');
+        return { error: null };
+      }
+    } catch (error) {
+      console.error('OTP verification exception:', error);
+      toast.error('An unexpected error occurred');
+      return { error };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     try {
       if (user) {
@@ -189,6 +246,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signUp,
     signIn,
+    signInWithPhone,
+    verifyOtp,
     signOut
   };
 
