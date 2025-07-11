@@ -340,7 +340,7 @@ const Auth = () => {
                               <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
                               <Input
                                 type="tel"
-                                placeholder="+1234567890"
+                                placeholder="+1 234 567 8900 (include country code)"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
@@ -370,82 +370,169 @@ const Auth = () => {
                 </TabsContent>
 
                 <TabsContent value="signup">
-                  <form onSubmit={handleSignUp}>
-                    <CardContent className="space-y-6">
-                      <div className="text-center space-y-2">
-                        <CardTitle className="text-2xl text-white">
-                          Create Account
-                        </CardTitle>
-                        <CardDescription className="text-gray-300 text-base">
-                          Join thousands of users analyzing geospatial data
-                        </CardDescription>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        <div className="relative group">
-                          <User className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
-                          <Input
-                            type="text"
-                            placeholder="Full name"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
+                  <div className="space-y-4">
+                    {/* Method Selection for Sign Up */}
+                    <div className="flex gap-2 p-1 bg-white/5 rounded-lg">
+                      <Button
+                        type="button"
+                        variant={authMethod === 'email' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setAuthMethod('email')}
+                        className="flex-1"
+                      >
+                        <Mail className="h-4 w-4 mr-1" />
+                        Email
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={authMethod === 'phone' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setAuthMethod('phone')}
+                        className="flex-1"
+                      >
+                        <Phone className="h-4 w-4 mr-1" />
+                        Phone
+                      </Button>
+                    </div>
+
+                    {authMethod === 'email' ? (
+                      <form onSubmit={handleSignUp}>
+                        <CardContent className="space-y-6">
+                          <div className="text-center space-y-2">
+                            <CardTitle className="text-2xl text-white">
+                              Create Account
+                            </CardTitle>
+                            <CardDescription className="text-gray-300 text-base">
+                              Join thousands of users analyzing geospatial data
+                            </CardDescription>
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <div className="relative group">
+                              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                              <Input
+                                type="text"
+                                placeholder="Full name"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
+                                required
+                                disabled={isSubmitting}
+                              />
+                            </div>
+                            
+                            <div className="relative group">
+                              <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                              <Input
+                                type="email"
+                                placeholder="Email address"
+                                value={signUpEmail}
+                                onChange={(e) => setSignUpEmail(e.target.value)}
+                                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
+                                required
+                                disabled={isSubmitting}
+                              />
+                            </div>
+                            
+                            <div className="relative group">
+                              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                              <Input
+                                type={showSignUpPassword ? "text" : "password"}
+                                placeholder="Password (min. 6 characters)"
+                                value={signUpPassword}
+                                onChange={(e) => setSignUpPassword(e.target.value)}
+                                className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
+                                minLength={6}
+                                required
+                                disabled={isSubmitting}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                                className="absolute right-3 top-3 text-gray-400 hover:text-blue-400 transition-colors"
+                                disabled={isSubmitting}
+                              >
+                                {showSignUpPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </button>
+                            </div>
+                          </div>
+                        </CardContent>
                         
-                        <div className="relative group">
-                          <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
-                          <Input
-                            type="email"
-                            placeholder="Email address"
-                            value={signUpEmail}
-                            onChange={(e) => setSignUpEmail(e.target.value)}
-                            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        
-                        <div className="relative group">
-                          <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
-                          <Input
-                            type={showSignUpPassword ? "text" : "password"}
-                            placeholder="Password (min. 6 characters)"
-                            value={signUpPassword}
-                            onChange={(e) => setSignUpPassword(e.target.value)}
-                            className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
-                            minLength={6}
-                            required
-                            disabled={isSubmitting}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowSignUpPassword(!showSignUpPassword)}
-                            className="absolute right-3 top-3 text-gray-400 hover:text-blue-400 transition-colors"
+                        <CardFooter>
+                          <Button 
+                            type="submit" 
+                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 group" 
                             disabled={isSubmitting}
                           >
-                            {showSignUpPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                          </button>
-                        </div>
-                      </div>
-                    </CardContent>
-                    
-                    <CardFooter>
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 group" 
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        ) : null}
-                        {isSubmitting ? 'Creating account...' : 'Create Account'}
-                        {!isSubmitting && <Sparkles className="ml-2 h-4 w-4 group-hover:rotate-12 transition-transform" />}
-                      </Button>
-                    </CardFooter>
-                  </form>
+                            {isSubmitting ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            ) : null}
+                            {isSubmitting ? 'Creating account...' : 'Create Account'}
+                            {!isSubmitting && <Sparkles className="ml-2 h-4 w-4 group-hover:rotate-12 transition-transform" />}
+                          </Button>
+                        </CardFooter>
+                      </form>
+                    ) : (
+                      <form onSubmit={handlePhoneSignIn}>
+                        <CardContent className="space-y-6">
+                          <div className="text-center space-y-2">
+                            <CardTitle className="text-2xl text-white">
+                              Sign Up with Phone
+                            </CardTitle>
+                            <CardDescription className="text-gray-300 text-base">
+                              Enter your phone number with country code to get started
+                            </CardDescription>
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <div className="relative group">
+                              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                              <Input
+                                type="text"
+                                placeholder="Full name"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
+                                required
+                                disabled={isSubmitting}
+                              />
+                            </div>
+                            
+                            <div className="relative group">
+                              <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                              <Input
+                                type="tel"
+                                placeholder="+1 234 567 8900 (include country code)"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-all duration-300"
+                                required
+                                disabled={isSubmitting}
+                              />
+                            </div>
+                            
+                            <div className="text-xs text-gray-400 bg-white/5 p-3 rounded-lg">
+                              💡 Include your country code (e.g., +1 for US, +44 for UK, +91 for India, +86 for China)
+                            </div>
+                          </div>
+                        </CardContent>
+                        
+                        <CardFooter>
+                          <Button 
+                            type="submit" 
+                            className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 group" 
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            ) : null}
+                            {isSubmitting ? 'Sending code...' : 'Send Verification Code'}
+                            {!isSubmitting && <MessageSquare className="ml-2 h-4 w-4 group-hover:scale-110 transition-transform" />}
+                          </Button>
+                        </CardFooter>
+                      </form>
+                    )}
+                  </div>
                 </TabsContent>
               </Tabs>
             </Card>
