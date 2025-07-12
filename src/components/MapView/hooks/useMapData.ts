@@ -69,12 +69,13 @@ export const useMapData = (
           });
         }
       } else {
+        // Optimized rendering for large shapefiles
         const geoJsonLayer = L.geoJSON(data, {
           style: getGeoJsonStyle,
           pointToLayer: (feature, latlng) => {
             return createCircleMarker(latlng, {
-              radius: 8,
-              fillOpacity: 0.7
+              radius: 6,
+              fillOpacity: 0.8
             });
           },
           onEachFeature: (feature, layer) => {
@@ -86,10 +87,16 @@ export const useMapData = (
                 feature.geometry.type
               );
               layer.bindPopup(popupContent, { 
-                maxWidth: 350, 
-                className: 'custom-popup' 
+                maxWidth: 300, 
+                className: 'custom-popup',
+                autoPan: false
               });
             }
+          },
+          // Performance optimization for large datasets
+          filter: () => featureCount < 5000, // Limit features for performance
+          coordsToLatLng: (coords) => {
+            return new L.LatLng(coords[1], coords[0], coords[2]);
           }
         });
 
@@ -99,7 +106,8 @@ export const useMapData = (
         if (mapBounds.isValid()) {
           mapRef.current.fitBounds(mapBounds, { 
             padding: [20, 20],
-            maxZoom: 15
+            maxZoom: 15,
+            animate: false
           });
         }
       }

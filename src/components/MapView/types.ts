@@ -21,6 +21,7 @@ export interface BasemapConfig {
     updateWhenIdle?: boolean;
     keepBuffer?: number;
     updateWhenZooming?: boolean;
+    subdomains?: string;
   };
 }
 

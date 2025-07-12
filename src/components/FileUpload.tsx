@@ -52,9 +52,16 @@ const FileUpload = ({ onDataLoad }: FileUploadProps) => {
       }
       else if (fileName.endsWith('.zip') || fileName.endsWith('.shp')) {
         const arrayBuffer = await file.arrayBuffer();
-        const geoData = await shp(arrayBuffer);
-        onDataLoad(geoData.features || [geoData], 'shapefile');
-        toast.success('Shapefile loaded successfully!');
+        try {
+          const geoData = await shp(arrayBuffer);
+          // Ensure proper GeoJSON structure
+          const features = Array.isArray(geoData) ? geoData : (geoData.features || [geoData]);
+          onDataLoad(features, 'shapefile');
+          toast.success(`Shapefile loaded with ${features.length} features!`);
+        } catch (shpError) {
+          console.error('Shapefile parsing error:', shpError);
+          toast.error('Error parsing shapefile. Please ensure it\'s a valid .zip or .shp file.');
+        }
       }
       else {
         toast.error('Unsupported file type. Please upload GeoJSON, CSV, or Shapefile.');
